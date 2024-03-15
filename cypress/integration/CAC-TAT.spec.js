@@ -10,19 +10,19 @@ describe('Central de Atendimento ao Cliente TAT', function () {
   })
 
   it('preenche os campos obrigatórios e envia o formulário', function () {
-    cy.get('#firstName').type('Wyldvan', { delay: 0 })
-    cy.get('#lastName').type('Lima')
-    cy.get('#email').type('Wyldvan08@gmail.com')
+    cy.get('#firstName').type('Emanuelly')
+    cy.get('#lastName').type('Elisa da Mata')
+    cy.get('#email').type('emanuelly-damata94@comercialrizzo.com', { delay: 0 })
     cy.get('#open-text-area').type('nada dos nada dos nada haver! Neste exemplo, o texto é digitado na área de texto #open-text-area sem atraso entre as teclas, conforme solicitado no exercício. A propriedade delay é usada para personalizar o comportamento do comando .type(), permitindo que você controle o atraso entre as teclas digitadas 4.', { delay: 0 })
     cy.contains('button', 'Enviar').click()
     cy.get('.success').should('be.visible')
   })
 
   it('exibe mensagem de erro ao submeter o formulário com um email com formatação inválida', function () {
-    cy.get('#firstName').type('Wyldvan')
-    cy.get('#lastName').type('Lima')
-    cy.get('#email').type('Wyldvan08@gmail,com')
-    cy.get('#open-text-area').type('nada dos nada dos nada haver!')
+    cy.get('#firstName').type('Emanuelly')
+    cy.get('#lastName').type('Elisa da Mata')
+    cy.get('#email').type('emanuelly@comercialrizzo,com', { delay: 0 })
+    cy.get('#open-text-area').type('nada dos nada dos nada haver!', { delay: 0 })
     cy.contains('button', 'Enviar').click()
 
     cy.get('.error').should('be.visible')
@@ -35,11 +35,11 @@ describe('Central de Atendimento ao Cliente TAT', function () {
   })
 
   it('exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', function () {
-    cy.get('#firstName').type('Wyldvan')
-    cy.get('#lastName').type('Lima')
-    cy.get('#email').type('Wyldvan08@gmail,com')
+    cy.get('#firstName').type('Emanuelly')
+    cy.get('#lastName').type('Elisa da Mata')
+    cy.get('#email').type('emanuelly-damata94@comercialrizzo.com', { delay: 0 })
     cy.get('#phone-checkbox').check()
-    cy.get('#open-text-area').type('nada dos nada dos nada haver!')
+    cy.get('#open-text-area').type('nada dos nada dos nada haver!', { delay: 0 })
     cy.contains('button', 'Enviar').click()
 
     cy.get('.error').should('be.visible')
@@ -47,18 +47,18 @@ describe('Central de Atendimento ao Cliente TAT', function () {
 
   it('preenche e limpa os campos nome, sobrenome, email e telefone', function () {
     cy.get('#firstName')
-      .type('Wyldvan')
-      .should('have.value', 'Wyldvan')
+      .type('Emanuelly')
+      .should('have.value', 'Emanuelly')
       .clear()
       .should('have.value', '')
     cy.get('#lastName')
-      .type('Lima')
-      .should('have.value', 'Lima')
+      .type('Elisa da Mata')
+      .should('have.value', 'Elisa da Mata')
       .clear()
       .should('have.value', '')
     cy.get('#email')
-      .type('wyldvan@gmail.com')
-      .should('have.value', 'wyldvan@gmail.com')
+      .type('emanuelly-damata94@comercialrizzo.com', { delay: 0 })
+      .should('have.value', 'emanuelly-damata94@comercialrizzo.com', { delay: 0 })
       .clear()
       .should('have.value', '')
     cy.get('#phone')
@@ -149,5 +149,17 @@ describe('Central de Atendimento ao Cliente TAT', function () {
         expect($input[0].files[0].name).to.equal('example.json')
       })
 
+  })
+
+  it('verifica que a política de privacidade abre em outra aba sem a necessidade de um clique', function () {
+    cy.get('#privacy a').should('have.attr', 'target', '_blank')
+  })
+
+  it('acessa a página da política de privacidade removendo o target e então clicando no link', function () {
+    cy.get('#privacy a')
+      .invoke('removeAttr', 'target')
+      .click()
+
+    cy.contains('Talking About Testing').should('be.visible')
   })
 })
