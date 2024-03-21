@@ -1,6 +1,8 @@
 /// <reference types="Cypress" />
 
 describe('Central de Atendimento ao Cliente TAT', function () {
+  const THREE_SECONDS_IN_MS = 3000
+
   beforeEach(function () {
     cy.visit('./src/index.html');
   });
@@ -10,15 +12,24 @@ describe('Central de Atendimento ao Cliente TAT', function () {
   })
 
   it('preenche os campos obrigatórios e envia o formulário', function () {
+    cy.clock() // Faz o tempo parar
+
     cy.get('#firstName').type('Emanuelly')
     cy.get('#lastName').type('Elisa da Mata')
     cy.get('#email').type('emanuelly-damata94@comercialrizzo.com', { delay: 0 })
     cy.get('#open-text-area').type('nada dos nada dos nada haver! Neste exemplo, o texto é digitado na área de texto #open-text-area sem atraso entre as teclas, conforme solicitado no exercício. A propriedade delay é usada para personalizar o comportamento do comando .type(), permitindo que você controle o atraso entre as teclas digitadas 4.', { delay: 0 })
     cy.contains('button', 'Enviar').click()
+
     cy.get('.success').should('be.visible')
+    cy.tick(THREE_SECONDS_IN_MS) // Avança no tempo
+
+    cy.get('.success').should('not.be.visible')
   })
 
   it('exibe mensagem de erro ao submeter o formulário com um email com formatação inválida', function () {
+
+    cy.clock()
+
     cy.get('#firstName').type('Emanuelly')
     cy.get('#lastName').type('Elisa da Mata')
     cy.get('#email').type('emanuelly@comercialrizzo,com', { delay: 0 })
@@ -26,6 +37,9 @@ describe('Central de Atendimento ao Cliente TAT', function () {
     cy.contains('button', 'Enviar').click()
 
     cy.get('.error').should('be.visible')
+    cy.tick(THREE_SECONDS_IN_MS)
+
+    cy.get('.error').should('not.be.visible')
   })
 
   it('campo telefone continua vazio quando preenchido com valor não numerico', function () {
@@ -35,6 +49,8 @@ describe('Central de Atendimento ao Cliente TAT', function () {
   })
 
   it('exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', function () {
+    cy.clock()
+
     cy.get('#firstName').type('Emanuelly')
     cy.get('#lastName').type('Elisa da Mata')
     cy.get('#email').type('emanuelly-damata94@comercialrizzo.com', { delay: 0 })
@@ -43,6 +59,9 @@ describe('Central de Atendimento ao Cliente TAT', function () {
     cy.contains('button', 'Enviar').click()
 
     cy.get('.error').should('be.visible')
+    cy.tick(THREE_SECONDS_IN_MS)
+
+    cy.get('.error').should('not.be.visible')
   })
 
   it('preenche e limpa os campos nome, sobrenome, email e telefone', function () {
@@ -69,15 +88,25 @@ describe('Central de Atendimento ao Cliente TAT', function () {
   })
 
   it('exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', function () {
+    cy.clock()
+
     cy.contains('button', 'Enviar').click()
 
     cy.get('.error').should('be.visible')
+    cy.tick(THREE_SECONDS_IN_MS)
+
+    cy.get('.error').should('not.be.visible')
   })
 
   it('envia o formuário com sucesso usando um comando customizado', function () {
+    cy.clock()
+
     cy.fillMandatoryFieldsAndSubmit()
 
     cy.get('.success').should('be.visible')
+    cy.tick(THREE_SECONDS_IN_MS)
+
+    cy.get('.error').should('not.be.visible')
   })
 
   it('seleciona um produto (YouTube) por seu texto', function () {
