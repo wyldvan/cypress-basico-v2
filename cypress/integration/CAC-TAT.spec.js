@@ -191,4 +191,32 @@ describe('Central de Atendimento ao Cliente TAT', function () {
 
     cy.contains('Talking About Testing').should('be.visible')
   })
+
+  it('exibe e esconde as mensagens de sucesso e erro usando o .invoke', () => {
+    cy.get('.success')
+      .should('not.be.visible')
+      .invoke('show')
+      .should('be.visible')
+      .and('contain', 'Mensagem enviada com sucesso.')
+      .invoke('hide')
+      .should('not.be.visible')
+    cy.get('.error')
+      .should('not.be.visible')
+      .invoke('show')
+      .should('be.visible')
+      .and('contain', 'Valide os campos obrigatórios!')
+      .invoke('hide')
+      .should('not.be.visible')
+  })
+
+  it('preenche a area de texto usando o comando invoke', function () {
+
+    cy.get('#firstName').type('Emanuelly')
+    cy.get('#lastName').type('Elisa da Mata')
+    cy.get('#email').type('emanuelly@comercialrizzo,com')
+    cy.get('#open-text-area')
+      .invoke('val', 'Nada Haver, dos nada haver dos nada haver!')
+      .should('have.value', 'Nada Haver, dos nada haver dos nada haver!')
+    cy.contains('button', 'Enviar').click()
+  })
 })
