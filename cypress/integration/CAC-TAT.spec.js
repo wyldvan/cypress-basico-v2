@@ -14,8 +14,8 @@ describe('Central de Atendimento ao Cliente TAT', function () {
   it('preenche os campos obrigatórios e envia o formulário', function () {
     cy.clock() // Faz o tempo parar
 
-    cy.get('#firstName').type('Emanuelly')
-    cy.get('#lastName').type('Elisa da Mata')
+    cy.get('#firstName').type('Emanuelly', { delay: 0 })
+    cy.get('#lastName').type('Elisa da Mata', { delay: 0 })
     cy.get('#email').type('emanuelly-damata94@comercialrizzo.com', { delay: 0 })
     cy.get('#open-text-area').type('nada dos nada dos nada haver! Neste exemplo, o texto é digitado na área de texto #open-text-area sem atraso entre as teclas, conforme solicitado no exercício. A propriedade delay é usada para personalizar o comportamento do comando .type(), permitindo que você controle o atraso entre as teclas digitadas 4.', { delay: 0 })
     cy.contains('button', 'Enviar').click()
@@ -210,13 +210,30 @@ describe('Central de Atendimento ao Cliente TAT', function () {
   })
 
   it('preenche a area de texto usando o comando invoke', function () {
+    const longText = Cypress._.repeat('0123456789', 20)
 
-    cy.get('#firstName').type('Emanuelly')
-    cy.get('#lastName').type('Elisa da Mata')
-    cy.get('#email').type('emanuelly@comercialrizzo,com')
+    cy.get('#firstName').type('Emanuelly', { delay: 0 })
+    cy.get('#lastName').type('Elisa da Mata', { delay: 0 })
+    cy.get('#email').type('emanuelly@comercialrizzo,com', { delay: 0 })
     cy.get('#open-text-area')
-      .invoke('val', 'Nada Haver, dos nada haver dos nada haver!')
-      .should('have.value', 'Nada Haver, dos nada haver dos nada haver!')
+      .invoke('val', longText)
+      .should('have.value', longText)
     cy.contains('button', 'Enviar').click()
   })
+
+  it('faz uma requisição HTTP', function () {
+    cy.request('https://cac-tat.s3.eu-central-1.amazonaws.com/index.html')
+      .should(function (response) {
+        const { status, statusText, body } = response
+        expect(status).to.equal(200);
+        expect(statusText).to.equal('OK');
+        expect(body).to.include('CAC TAT');
+      });
+  });
+
+  it('encontrando o Gato', function () {
+    cy.get('#cat')
+      .invoke('show')
+      .should('be.visible')
+  });
 })
