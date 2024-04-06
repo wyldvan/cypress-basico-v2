@@ -32,8 +32,7 @@ Or, run `npm run cy:open` to open Cypress in interactive mode on a mobile viewpo
 
 If you want to support this project, leave a ⭐.
 
-[!NOTE]
-Apenas estudos.
+[!NOTE]Apenas estudos.
 
 ___
 
